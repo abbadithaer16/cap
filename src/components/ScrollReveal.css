@@ -1,0 +1,112 @@
+.scroll-stage {
+  position: relative;
+  height: 280vh;
+  z-index: 4;
+}
+
+.scroll-stage__inner {
+  position: relative;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.scroll-stage__headline {
+  position: absolute;
+  top: clamp(96px, 14vh, 160px);
+  left: 50%;
+  transform: translate(-50%, 40px);
+  opacity: 0;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(34px, 6.2vw, 78px);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  word-spacing: 0.18em;
+  color: var(--ink);
+  text-shadow: 0 2px 40px rgba(5, 6, 7, 0.9), 0 0 90px rgba(5, 6, 7, 0.7);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+.scroll-stage__callouts {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(22px, 4vh, 40px);
+  display: flex;
+  justify-content: center;
+  gap: clamp(16px, 3vw, 48px);
+  padding: 0 clamp(20px, 5vw, 64px);
+  pointer-events: none;
+}
+
+.callout {
+  opacity: 0;
+  transform: translateY(28px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 240px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: rgba(9, 11, 13, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  will-change: opacity, transform;
+}
+
+.callout__label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--accent-2);
+}
+
+.callout__title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+
+.callout__desc {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 300;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 860px) {
+  .scroll-stage {
+    height: 320vh;
+  }
+
+  .scroll-stage__headline {
+    top: 88px;
+    font-size: clamp(32px, 9vw, 44px);
+  }
+
+  .scroll-stage__callouts {
+    flex-direction: column;
+    align-items: center;
+    bottom: 28px;
+    gap: 10px;
+  }
+
+  .callout {
+    max-width: 320px;
+    width: 100%;
+    padding: 12px 16px;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .callout__desc {
+    display: none;
+  }
+}
