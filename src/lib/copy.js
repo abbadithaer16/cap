@@ -12,7 +12,7 @@ export const copy = {
 
     hero: {
       title: ['Every road', 'leads here.'],
-      body: 'An unofficial 3D concept for McDonald’s Jordan. Keep scrolling and the arches open.',
+      body: 'An unofficial design concept for McDonald’s Jordan. Keep scrolling and the arches open.',
       hint: 'Scroll',
     },
     build: {
@@ -62,7 +62,7 @@ export const copy = {
 
     hero: {
       title: ['كل الطرق', 'تؤدي إلى هنا.'],
-      body: 'تصوّر ثلاثي الأبعاد غير رسمي لماكدونالدز الأردن. تابع التمرير لتنفتح الأقواس.',
+      body: 'تصوّر تصميمي غير رسمي لماكدونالدز الأردن. تابع التمرير لتنفتح الأقواس.',
       hint: 'مرّر',
     },
     build: {

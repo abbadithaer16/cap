@@ -1,6 +1,6 @@
 /**
  * The arches, drawn once in a 1200-unit design space (y down) and reused
- * as an SVG mark, a canvas decal and extruded 3D architecture.
+ * as the SVG mark and as the two sliding halves in the opening scene.
  *
  * Feet stand on y = 890. The logo's middle stem stops short at y = 850;
  * the architectural version runs it down to the floor so the M can stand
@@ -35,7 +35,9 @@ export const LEFT_DOOR = [
 
 export const ARCH_VIEWBOX = '262 304 676 594'
 
-export const archPathD = LOGO.map(([cmd, ...n]) => cmd + n.join(' ')).join('')
+const toD = (cmds) => cmds.map(([cmd, ...n]) => cmd + n.join(' ')).join('')
+export const archPathD = toD(LOGO)
+export const leftDoorD = toD(LEFT_DOOR)
 
 export const X0 = 600
 export const BASE = 890
@@ -47,17 +49,4 @@ export function legSpans(width) {
   const s = width / SPAN
   const span = (a, b) => [(a - X0) * s, (b - X0) * s]
   return [span(270, 352), span(557, 643), span(848, 930)]
-}
-
-/** Draw the mark into a 2D canvas context, fitted to a box. */
-export function drawArches(ctx, cx, cy, width, color) {
-  const scale = width / SPAN
-  const path = new Path2D(archPathD)
-  ctx.save()
-  ctx.translate(cx, cy)
-  ctx.scale(scale, scale)
-  ctx.translate(-X0, -(312 + RISE / 2))
-  ctx.fillStyle = color
-  ctx.fill(path)
-  ctx.restore()
 }

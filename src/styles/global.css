@@ -78,11 +78,10 @@ a {
 }
 
 /* ---------------------------------------------------------------
-   Fixed layers: colour field < canvas < overlay < text < nav < grain
+   Fixed layers: colour field < photo stage < text < nav < grain
    --------------------------------------------------------------- */
 .field,
-.stage,
-.overlay {
+.stage {
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -134,15 +133,80 @@ a {
 
 .stage {
   z-index: 1;
+  overflow: hidden;
 }
 
-.stage__canvas {
-  width: 100% !important;
-  height: 100% !important;
+/* opening scene: flat poster arches and lanes, behind and in front of the burger */
+.hero-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform, opacity;
 }
 
-.overlay {
-  z-index: 2;
+.hero-art__shadow path {
+  fill: rgb(70 0 0 / 0.3);
+}
+
+.product,
+.product-shadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.product {
+  max-width: none;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.product-shadow {
+  width: 400px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(30 0 0 / 0.75), rgb(30 0 0 / 0.35) 55%, transparent);
+  filter: blur(6px);
+}
+
+/* the last scene's spotlight */
+.spot {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  --floor: 70vh;
+}
+
+.spot__beam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(90vw, 900px);
+  height: var(--floor);
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, rgb(255 222 160 / 0.02), rgb(255 222 160 / 0.2));
+  clip-path: polygon(45% 0, 55% 0, 82% 100%, 18% 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 12%, #000 38%, #000 62%, transparent 88%);
+  mask-image: linear-gradient(to right, transparent 12%, #000 38%, #000 62%, transparent 88%);
+  filter: blur(10px);
+}
+
+.spot__pool {
+  position: absolute;
+  left: -200px;
+  top: -40px;
+  width: 400px;
+  height: 80px;
+  transform-origin: 50% 50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 196 110 / 0.55), rgb(255 160 60 / 0.18) 60%, transparent);
+  filter: blur(4px);
 }
 
 /* ---------------------------------------------------------------
@@ -406,21 +470,6 @@ a {
   }
 }
 
-.fallback-art {
-  display: none;
-}
-
-.no-webgl .fallback-art {
-  display: block;
-  position: absolute;
-  left: 50%;
-  bottom: 14svh;
-  width: min(44vw, 300px);
-  height: auto;
-  transform: translateX(-50%);
-  color: var(--arch);
-}
-
 /* the one load moment: the headline widens out like the road */
 .is-loaded .hero__title span {
   animation: widen 1.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -476,7 +525,7 @@ a {
 .copy--build {
   align-self: center;
   justify-self: start;
-  max-width: min(46vw, 620px);
+  max-width: min(32vw, 470px);
 }
 
 .ingredients__label {
@@ -593,7 +642,7 @@ a {
 /* ---------------------------------------------------------------
    Exploded-view labels and the curved McCafé line (positioned by 3D)
    --------------------------------------------------------------- */
-.blabel {
+.plabel {
   position: absolute;
   left: 0;
   top: 0;
@@ -601,37 +650,52 @@ a {
   will-change: transform, opacity;
 }
 
-.blabel span {
+.plabel__inner {
   position: absolute;
   top: 0;
+  /* sides follow the photo, not the reading direction */
+  direction: ltr;
   display: flex;
   align-items: center;
   gap: 10px;
   white-space: nowrap;
-  font-size: var(--step--1);
-  font-weight: 650;
-  color: var(--bun);
   transform: translateY(-50%);
 }
 
-.blabel span::before {
-  content: '';
-  width: 44px;
-  height: 1px;
-  background: rgb(255 248 236 / 0.7);
+.plabel--right .plabel__inner {
+  left: -4px;
 }
 
-.blabel--left span {
-  right: 0;
+.plabel--left .plabel__inner {
+  right: -4px;
   flex-direction: row-reverse;
 }
 
-.blabel--right span {
-  left: 0;
+.plabel__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--bun);
+  box-shadow: 0 0 0 3px rgb(92 10 7 / 0.45);
+}
+
+.plabel__line {
+  width: var(--len, 40px);
+  height: 1px;
+  margin: 0 -10px;
+  background: rgb(255 248 236 / 0.75);
+}
+
+.plabel__text {
+  unicode-bidi: plaintext;
+  font-size: var(--step--1);
+  font-weight: 650;
+  color: var(--bun);
 }
 
 @media (max-width: 820px) {
-  .blabel {
+  .plabel {
     display: none;
   }
 }
@@ -656,7 +720,7 @@ a {
 
 .curve__text {
   font-family: var(--font);
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 700;
   fill: var(--roast);
   letter-spacing: 0.01em;
