@@ -196,6 +196,24 @@ a {
   opacity: 0.85;
 }
 
+/* over the giant arches the nav can land on red or gold: give it gold chips */
+.nav__brand,
+.nav__official {
+  transition: background-color 0.35s ease, padding 0.35s ease;
+  border-radius: 999px;
+}
+
+:root[data-scene='2'] .nav__brand,
+:root[data-scene='2'] .nav__official,
+:root[data-scene='2'] .nav__lang {
+  background: var(--arch);
+}
+
+:root[data-scene='2'] .nav__brand {
+  padding: 6px 12px 6px 8px;
+  margin-inline-start: -8px;
+}
+
 .nav__actions {
   display: flex;
   align-items: center;
@@ -494,11 +512,17 @@ a {
   }
 }
 
-/* scene 3: stacked words on the right, like the fries poster */
+/* scene 3: stacked words centred on the right arch's opening (75vw) */
 .copy--fries {
+  --col: min(36vw, 480px);
   align-self: center;
-  justify-self: end;
-  width: min(40vw, 520px);
+  justify-self: start;
+  width: var(--col);
+  margin-inline-start: calc(75vw - var(--gutter) - var(--col) / 2);
+}
+
+.display--stack {
+  font-size: clamp(2.6rem, 1.2rem + 4.8vw, 6rem);
 }
 
 .display--stack span {
@@ -785,6 +809,7 @@ a {
     justify-self: stretch;
     width: auto;
     max-width: none;
+    margin-inline-start: 0;
   }
 
   .copy--fries .lede,

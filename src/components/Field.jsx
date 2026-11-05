@@ -36,6 +36,7 @@ export default function Field() {
       if (behindNav !== lastTone) {
         lastTone = behindNav
         document.documentElement.dataset.tone = TONE[behindNav]
+        document.documentElement.dataset.scene = String(behindNav)
         meta?.setAttribute('content', COLORS[behindNav])
       }
       layers.current.forEach((el, k) => {

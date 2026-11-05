@@ -156,7 +156,7 @@ export default function Coffee() {
       const ring = ringRefs.current[i]
       const ripple = rippleRefs.current[i]
       const spec = RINGS[i]
-      const pop = easeOutBack(clamp((p - 3.18 - i * 0.07) / 0.14))
+      const pop = easeOutBack(clamp((p - 3.1 - i * 0.06) / 0.14))
       const drift = (p - 3) * 0.35
       const x = spec.at[0] + Math.sin(drift + spec.phase) * 0.12
       const z = spec.at[1] + Math.cos(drift * 0.8 + spec.phase) * 0.1
