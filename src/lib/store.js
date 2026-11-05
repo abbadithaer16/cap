@@ -3,9 +3,9 @@ import { damp } from './math'
 import { REST, sceneIndex } from './timeline'
 
 /**
- * Mutable per-frame state shared by the DOM layers and the WebGL scene.
- * Nothing here goes through React state: scroll and frame values change
- * sixty times a second.
+ * Mutable per-frame scroll state shared by the colour field and the photo
+ * stage. Nothing here goes through React state: these values change sixty
+ * times a second.
  */
 export const store = {
   target: 0, // raw scroll position in scene units
@@ -13,10 +13,6 @@ export const store = {
   reduced: false,
   mobile: false,
   rtl: false,
-  webgl: true,
-  pointer: { x: 0, y: 0 },
-  labels: [], // burger labels, filled by the overlay
-  curve: null, // curved McCafé line, filled by the overlay
 }
 
 const listeners = new Set()
@@ -25,6 +21,9 @@ export const subscribe = (fn) => {
   fn(store.p)
   return () => listeners.delete(fn)
 }
+
+/** Re-run every listener at the current position (after a resize or language switch). */
+export const redraw = () => listeners.forEach((fn) => fn(store.p))
 
 let last = -1
 function tick(_time, deltaMs) {

@@ -1,6 +1,6 @@
-import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { copy, OFFICIAL_URL } from './lib/copy'
-import { startTicker, store, subscribe } from './lib/store'
+import { redraw, startTicker, store, subscribe } from './lib/store'
 import { smoothstep } from './lib/math'
 import { useMediaQuery, useReducedMotion } from './hooks/useMediaQuery'
 import { useScrollDriver } from './hooks/useScrollDriver'
@@ -8,18 +8,8 @@ import ArchMark from './components/ArchMark'
 import Nav from './components/Nav'
 import Loader from './components/Loader'
 import Field from './components/Field'
-import Overlay from './components/Overlay'
-
-const Scene = lazy(() => import('./three/Scene'))
-
-function hasWebGL() {
-  try {
-    const c = document.createElement('canvas')
-    return !!(c.getContext('webgl2') || c.getContext('webgl'))
-  } catch {
-    return false
-  }
-}
+import Stage from './components/Stage'
+import { PRODUCT_IMAGES } from './lib/products'
 
 function initialLang() {
   try {
@@ -33,14 +23,20 @@ function initialLang() {
   return 'en'
 }
 
-/** Fonts are needed before the 3D textures paint the McCafé wordmark. */
-function waitForFonts() {
-  if (!document.fonts?.load) return Promise.resolve()
-  const loads = Promise.all([
-    document.fonts.load('700 100px "Archivo Variable"'),
-    document.fonts.load('800 100px "Cairo Variable"', 'ع'),
-  ])
-  return Promise.race([loads, new Promise((r) => setTimeout(r, 2500))])
+/** Wait for the type and the product photos so the first frame is complete. */
+function waitForAssets() {
+  const fonts = document.fonts?.load
+    ? Promise.all([
+        document.fonts.load('700 100px "Archivo Variable"'),
+        document.fonts.load('800 100px "Cairo Variable"', 'ع'),
+      ])
+    : Promise.resolve()
+  const images = PRODUCT_IMAGES.map((src) => {
+    const img = new Image()
+    img.src = src
+    return img.decode().catch(() => {})
+  })
+  return Promise.race([Promise.all([fonts, ...images]), new Promise((r) => setTimeout(r, 4000))])
 }
 
 export default function App() {
@@ -48,9 +44,7 @@ export default function App() {
   const t = copy[lang]
   const reduced = useReducedMotion()
   const mobile = useMediaQuery('(max-width: 820px)')
-  const [webgl] = useState(hasWebGL)
-  const [fonts, setFonts] = useState(false)
-  const [canvasReady, setCanvasReady] = useState(false)
+  const [assets, setAssets] = useState(false)
   const [minTime, setMinTime] = useState(false)
   const [loaderGone, setLoaderGone] = useState(false)
   const mainRef = useRef()
@@ -62,14 +56,15 @@ export default function App() {
     store.reduced = reduced
     store.mobile = mobile
     store.rtl = t.dir === 'rtl'
-    store.webgl = webgl
-  }, [reduced, mobile, t.dir, webgl])
+    // layout depends on these: redraw the current frame when they change
+    redraw()
+  }, [reduced, mobile, t.dir])
 
   useEffect(() => {
     const html = document.documentElement
     html.lang = lang
     html.dir = t.dir
-    document.title = lang === 'ar' ? 'ماكدونالدز الأردن، تصوّر ثلاثي الأبعاد' : 'McDonald’s Jordan, a 3D concept'
+    document.title = lang === 'ar' ? 'ماكدونالدز الأردن، تصوّر تصميمي' : 'McDonald’s Jordan, a design concept'
     try {
       window.localStorage.setItem('mcd-jo-lang', lang)
     } catch {
@@ -82,7 +77,7 @@ export default function App() {
 
   useEffect(() => {
     let alive = true
-    waitForFonts().then(() => alive && setFonts(true))
+    waitForAssets().then(() => alive && setAssets(true))
     const timer = setTimeout(() => setMinTime(true), reduced ? 200 : 1300)
     return () => {
       alive = false
@@ -90,23 +85,13 @@ export default function App() {
     }
   }, [reduced])
 
-  const loaded = fonts && minTime && (canvasReady || !webgl)
+  const loaded = assets && minTime
   useEffect(() => {
     if (!loaded) return
     document.documentElement.classList.add('is-loaded')
     const timer = setTimeout(() => setLoaderGone(true), reduced ? 250 : 1100)
     return () => clearTimeout(timer)
   }, [loaded, reduced])
-
-  // pointer parallax input, desktop only
-  useEffect(() => {
-    const move = (e) => {
-      store.pointer.x = (e.clientX / window.innerWidth) * 2 - 1
-      store.pointer.y = -((e.clientY / window.innerHeight) * 2 - 1)
-    }
-    window.addEventListener('pointermove', move, { passive: true })
-    return () => window.removeEventListener('pointermove', move)
-  }, [])
 
   // the scroll hint fades as soon as the page moves; the hero words step
   // aside while the arches open so they never sit on top of the burger
@@ -125,20 +110,12 @@ export default function App() {
   )
 
   const toggleLang = useCallback(() => setLang((l) => (l === 'en' ? 'ar' : 'en')), [])
-  const onReady = useCallback(() => setCanvasReady(true), [])
 
   return (
-    <div className={`app${webgl ? '' : ' no-webgl'}`} id="top">
+    <div className="app" id="top">
       <Loader t={t} done={loaded} gone={loaderGone} />
       <Field />
-      {webgl && fonts && (
-        <div className="stage" aria-hidden="true">
-          <Suspense fallback={null}>
-            <Scene mobile={mobile} onReady={onReady} />
-          </Suspense>
-        </div>
-      )}
-      <Overlay t={t} />
+      <Stage t={t} />
       <Nav t={t} onToggleLang={toggleLang} />
 
       <main className="scenes" ref={mainRef}>
@@ -150,7 +127,6 @@ export default function App() {
                 <span>{t.hero.title[0]}</span> <span>{t.hero.title[1]}</span>
               </h1>
             </div>
-            <ArchMark className="fallback-art" />
             <div className="hero__foot" ref={footRef}>
               <p className="hero__body">{t.hero.body}</p>
               <p className="hero__hint" ref={hintRef} aria-hidden="true">
