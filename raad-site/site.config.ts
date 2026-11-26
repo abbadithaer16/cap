@@ -41,14 +41,26 @@ const site: SiteConfig = {
       width: 603,
       height: 354,
     },
-    // Workshop photos. Until a file exists, a marked placeholder is shown in its place.
-    // To add one: put the photo in public/images/raad with this exact name, describe it in
-    // `alt`, and rebuild. Real photos of the workshop only.
+    // Real workshop photos (number plates blurred). The first one is shown large.
+    // To add one: put the photo in public/images/raad, add it here with what it shows in `alt`,
+    // and rebuild. A listed file that is missing shows a marked placeholder instead.
+    // Never use the AI-generated posters as workshop photos.
     gallery: [
-      { src: '/images/raad/workshop-1.jpg', alt: { ar: 'صورة من الورشة 1' } },
-      { src: '/images/raad/workshop-2.jpg', alt: { ar: 'صورة من الورشة 2' } },
-      { src: '/images/raad/workshop-3.jpg', alt: { ar: 'صورة من الورشة 3' } },
-      { src: '/images/raad/workshop-4.jpg', alt: { ar: 'صورة من الورشة 4' } },
+      {
+        src: '/images/raad/workshop-storefront.jpg',
+        alt: { ar: 'واجهة مركز الرعد بلافتته الخضراء، وسيارات الزبائن أمام مداخل الورشة' },
+        focus: '50% 4%',
+      },
+      {
+        src: '/images/raad/workshop-byd.jpg',
+        alt: { ar: 'سيارة BYD مرفوعة على الرافعة عند مدخل الورشة' },
+        focus: '50% 50%',
+      },
+      {
+        src: '/images/raad/workshop-kia.jpg',
+        alt: { ar: 'سيارة كيا على الرافعة وغطاء المحرك مفتوح، وديسكات البريك مفكوكة على الأرض' },
+        focus: '50% 34%',
+      },
     ],
     og: '/images/raad/og.jpg',
     icon: '/images/raad/icon.png',

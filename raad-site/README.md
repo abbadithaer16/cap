@@ -45,11 +45,16 @@ and `npm run build` stop with a message saying exactly what to fix.
 
 ## Workshop photos (gallery)
 
-The gallery has 4 marked placeholders ("مكان صورة من الورشة"). To fill one, add a **real
-workshop photo** to `public/images/raad/` with the name from `images.gallery` in
-`site.config.ts` (`workshop-1.jpg` … `workshop-4.jpg`), write what it shows in its `alt`, and
-rebuild. Any shape works (shown cropped to 4:3; use `focus: '50% 30%'` to choose the visible
-part). The build lists the photos that are still missing.
+`images.gallery` in `site.config.ts` lists the real workshop photos in
+`public/images/raad/` (number plates blurred). The first one is shown large (the storefront);
+the others fill the grid next to and under it. To add a photo: put the file in
+`public/images/raad/`, add it to the list with what it shows in `alt`, and rebuild. Three
+photos per extra row look best on desktop. Use `focus` (e.g. `'50% 30%'`) to choose which part
+stays visible when a photo is cropped. A listed file that is missing shows a marked
+placeholder instead, and the build prints its name.
+
+Blur number plates (and any phone numbers on plate frames) before adding customers' cars.
+Only real photos: the AI-generated posters stay out of the gallery.
 
 You don't need to resize anything: every build creates small WebP versions of each photo
 (`public/images/_generated`, not committed), and phones download the small ones.
