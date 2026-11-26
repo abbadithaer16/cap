@@ -1,0 +1,9 @@
+# Netlify build settings for this site.
+# In Netlify: Site configuration → Build & deploy → Build settings → Base directory = raad-site
+# (this file is read from the base directory and sets the rest).
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"

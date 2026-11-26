@@ -1,0 +1,8 @@
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+# Rebuilt automatically from public/images by scripts/images.mjs
+public/images/_generated
