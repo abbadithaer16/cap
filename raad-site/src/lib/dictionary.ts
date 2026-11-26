@@ -29,10 +29,11 @@ const ar = {
     supervised: 'بإشراف',
   },
   services: { title: 'خدماتنا', ask: 'احجز على واتساب' },
-  gallery: {
-    title: 'من الورشة',
-    placeholder: (n: string) => `مكان صورة من الورشة ${n}`,
-    placeholderNote: 'تُضاف صورة حقيقية قريباً',
+  gallery: { title: 'من الورشة' },
+  install: {
+    button: 'ثبّت التطبيق',
+    iosHint: 'اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية»',
+    close: 'إغلاق',
   },
   reviews: {
     title: 'آراء زبائننا',

@@ -30,8 +30,8 @@ hours, phones, WhatsApp, address, map and colours.
 - **Services:** `highlight` is the end of the title shown on its own line in orange–red, like
   the center's own cards ("صيانة" / "البريكات"). `chips` are up to three tags under the title.
   The booking form's "الخدمة" list is built from the same titles (plus "أخرى").
-- **Reviews:** real Google reviews, copied word for word. The third reviewer's name is still
-  `[الاسم]`: replace it with the name shown on Google.
+- **Reviews:** real Google reviews, copied word for word. The third reviewer's name is not
+  known yet, so its card shows no name line: add `author: '...'` as shown on Google.
 - **Map:** `contact.mapEmbedUrl` currently searches Google Maps for the center's name in Marka
   Al-Shamaliya. For the exact pin: Google Maps → the center → **Share → Embed a map** → copy only
   the link inside `src="..."` and paste it there. "الاتجاهات" already opens the exact place.
@@ -50,8 +50,8 @@ and `npm run build` stop with a message saying exactly what to fix.
 the others fill the grid next to and under it. To add a photo: put the file in
 `public/images/raad/`, add it to the list with what it shows in `alt`, and rebuild. Three
 photos per extra row look best on desktop. Use `focus` (e.g. `'50% 30%'`) to choose which part
-stays visible when a photo is cropped. A listed file that is missing shows a marked
-placeholder instead, and the build prints its name.
+stays visible when a photo is cropped. The build stops if a listed file is missing or its
+`alt` has no Arabic description.
 
 Blur number plates (and any phone numbers on plate frames) before adding customers' cars.
 Only real photos: the AI-generated posters stay out of the gallery.
@@ -59,17 +59,26 @@ Only real photos: the AI-generated posters stay out of the gallery.
 You don't need to resize anything: every build creates small WebP versions of each photo
 (`public/images/_generated`, not committed), and phones download the small ones.
 
-## Logo, share image and icons
+## Logo, share image and app icons
 
 `public/images/raad/logo-crop.jpg` is the logo in the header and footer. After changing it (or
-the colours), run:
+the colours), run `npm run social-images` to rebuild `og.jpg` (the preview shown when the link
+is shared on WhatsApp or Facebook).
 
-```bash
-npm run social-images
-```
+The app icons (`icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png`)
+are the round logo badge (`design-reference/logo-badge.png`) centred on navy. After changing the
+badge, run `npm run app-icons`. Commit the results.
 
-This rebuilds `og.jpg` (the preview shown when the link is shared on WhatsApp or Facebook) and
-the browser and phone icons (the gear ring with the bolt). Commit the results.
+## Installable app
+
+- `src/app/manifest.ts` → `/manifest.webmanifest` (name, short name "الرعد", RTL, standalone,
+  navy colours, icons).
+- `public/sw.js`: caches only the app shell (the page and its build files) so the site can be
+  installed and opens offline. It never caches or intercepts WhatsApp, phone or external links.
+  Change `CACHE` in it if the caching rules change.
+- "ثبّت التطبيق" in the footer and the phone menu: opens the install dialog on Android / Chrome,
+  shows "Share → Add to Home Screen" on iPhone Safari, and is hidden once installed or when the
+  browser cannot install sites.
 
 ## Design
 
@@ -90,7 +99,7 @@ Colours, glow and layout come from the center's own social media designs, kept i
 
 Run `npm run build` and drag the `out` folder (or a zip of its contents) onto
 **Netlify → Deploys**. `siteUrl` in `site.config.ts` must be the Netlify address
-(`https://raad-auto.netlify.app`) so Google and WhatsApp previews point to the right place.
+(`https://alraad-autojo.netlify.app`) so Google and WhatsApp previews point to the right place.
 A dropped site never updates on its own: rebuild and drop again after each change.
 
 ### Netlify from GitHub
@@ -102,6 +111,7 @@ repository, **Base directory** `raad-site`. Build command and publish folder com
 ## Checked before delivery
 
 - Screenshots at 375px and 1440px reviewed; no horizontal overflow; RTL throughout.
+- No placeholder content left: every gallery tile is a real workshop photo with Arabic alt text.
 - Every WhatsApp link and the booking form message start with `حجز من الموقع ✅`.
 - SEO: Arabic title/description, canonical, Open Graph image, `sitemap.xml`, `robots.txt`,
   and one JSON-LD `AutoRepair` entry for the single location. `noindex` while in demo.

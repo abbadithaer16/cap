@@ -6,6 +6,7 @@
   "scripts": {
     "images": "node scripts/images.mjs",
     "social-images": "node scripts/social-images.mjs",
+    "app-icons": "node scripts/app-icons.mjs",
     "predev": "node scripts/images.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/images.mjs",

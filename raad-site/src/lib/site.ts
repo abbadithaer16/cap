@@ -48,7 +48,7 @@ export function siteUrl(): string {
 if (process.env.NODE_ENV === 'production' && siteUrl().startsWith('http://localhost')) {
   console.warn(
     '\n⚠ siteUrl is not set: links in Google and WhatsApp previews will point to localhost.\n' +
-      "  Set siteUrl in site.config.ts (e.g. 'https://raad-auto.netlify.app'), or build on Netlify/Vercel.\n",
+      "  Set siteUrl in site.config.ts (e.g. 'https://alraad-autojo.netlify.app'), or build on Netlify/Vercel.\n",
   );
 }
 
@@ -118,14 +118,12 @@ export function openingHoursSpecification() {
     }));
 }
 
-/* ── Gallery: real photo if the file exists, otherwise a marked placeholder ── */
+/* ── Gallery ──────────────────────────────────────────────────────────────── */
 
 const publicFile = (src: string) => path.join(process.cwd(), 'public', src);
 
-export type GallerySlot = { photo: GalleryPhoto; ready: boolean };
-
-export function gallerySlots(): GallerySlot[] {
-  return site.images.gallery.map((photo) => ({ photo, ready: existsSync(publicFile(photo.src)) }));
+export function galleryPhotos(): GalleryPhoto[] {
+  return site.images.gallery;
 }
 
 /* ── Config checks (stop the build with a clear message) ─────────────────── */
@@ -150,15 +148,15 @@ function validate(c: SiteConfig) {
     }
     if (s.chips && s.chips.length > 3) problems.push(`services[${i}] has more than 3 chips.`);
   });
-  for (const f of [c.images.logo.src, c.images.og, c.images.icon, c.images.appleIcon]) {
+  const icons = Object.values(c.images.icons);
+  for (const f of [c.images.logo.src, c.images.og, ...icons, ...c.images.gallery.map((g) => g.src)]) {
     if (!existsSync(publicFile(f))) problems.push(`Image not found: public${f}`);
   }
+  c.images.gallery.forEach((g, i) => {
+    if (!/[\u0600-\u06FF]/.test(g.alt.ar)) problems.push(`images.gallery[${i}].alt needs an Arabic description of the photo.`);
+  });
   if (problems.length) {
     throw new Error(`\n\nsite.config.ts has ${problems.length} problem(s):\n  - ${problems.join('\n  - ')}\n`);
-  }
-  const missing = c.images.gallery.filter((g) => !existsSync(publicFile(g.src))).map((g) => `public${g.src}`);
-  if (missing.length && process.env.NODE_ENV === 'production') {
-    console.warn(`\nℹ Gallery: ${missing.length} placeholder(s) shown until these photos are added:\n  ${missing.join('\n  ')}\n`);
   }
 }
 

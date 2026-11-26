@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react';
-import { dict, site, t, telHref } from '@/lib/site';
+import { dict, lang, site, t, telHref } from '@/lib/site';
 import { HoursList } from './sections/Hours';
+import { InstallButton } from './pwa/InstallButton';
 import { Logo, PhoneText } from './ui';
 
 export function Footer() {
@@ -12,6 +13,7 @@ export function Footer() {
           <Logo className="w-44" sizes="176px" />
           <p className="mt-5 font-display text-xl leading-snug font-extrabold text-fg">{t(site.name)}</p>
           <p className="mt-1 text-soft">{t(site.trustLine)}</p>
+          <InstallButton lang={lang} variant="footer" className="mt-6" />
         </div>
         <div>
           <h2 className="text-lg font-extrabold">{dict.footer.hours}</h2>

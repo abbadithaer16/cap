@@ -17,8 +17,8 @@ async function* walk(dir) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (full !== outRoot) yield* walk(full);
-    } else if (/\.(jpe?g|png|webp)$/i.test(entry.name) && !/^(og|icon|apple-touch-icon)\./i.test(entry.name)) {
-      // og / icon files are served as-is (social previews and browser icons)
+    } else if (/\.(jpe?g|png|webp)$/i.test(entry.name) && !/^(og|icon|apple-touch-icon)[.-]/i.test(entry.name)) {
+      // og / icon-* files are served as-is (social previews and app icons)
       yield full;
     }
   }

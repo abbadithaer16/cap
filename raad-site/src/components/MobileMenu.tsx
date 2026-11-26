@@ -1,11 +1,24 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 type Item = { href: string; label: string };
 
-export function MobileMenu({ items, openLabel, closeLabel, navLabel }: { items: Item[]; openLabel: string; closeLabel: string; navLabel: string }) {
+export function MobileMenu({
+  items,
+  openLabel,
+  closeLabel,
+  navLabel,
+  children,
+}: {
+  items: Item[];
+  openLabel: string;
+  closeLabel: string;
+  navLabel: string;
+  /** Extra <li> items after the links (the install button). */
+  children?: ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -48,6 +61,7 @@ export function MobileMenu({ items, openLabel, closeLabel, navLabel }: { items: 
               </a>
             </li>
           ))}
+          {children}
         </ul>
       </nav>
     </div>

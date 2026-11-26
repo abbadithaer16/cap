@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import type { CSSProperties, ReactNode } from 'react';
 import { BrandDefs } from '@/components/GearRing';
+import { INSTALL_CAPTURE_SCRIPT } from '@/components/pwa/install-store';
+import { RegisterServiceWorker } from '@/components/pwa/RegisterServiceWorker';
 import { absoluteUrl, dict, lang, site, siteUrl, t } from '@/lib/site';
 import { cairo } from './fonts';
 import './globals.css';
@@ -25,9 +27,16 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image', title, description, images: [site.images.og] },
   icons: {
-    icon: [{ url: site.images.icon, type: 'image/png', sizes: '192x192' }],
-    apple: [{ url: site.images.appleIcon, sizes: '180x180' }],
+    icon: [
+      { url: site.images.icons.icon192, type: 'image/png', sizes: '192x192' },
+      { url: site.images.icons.icon512, type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [{ url: site.images.icons.apple, sizes: '180x180' }],
   },
+  manifest: '/manifest.webmanifest',
+  // Installed app on iPhone: full screen, black status bar, "الرعد" under the icon.
+  appleWebApp: { capable: true, title: t(site.shortName), statusBarStyle: 'black' },
+  other: { 'apple-mobile-web-app-capable': 'yes' },
   formatDetection: { telephone: false },
   // Demo before client approval: <meta name="robots" content="noindex">. Set noindex: false in site.config.ts to go live.
   ...(site.noindex ? { robots: 'noindex' } : {}),
@@ -69,8 +78,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           {dict.skip}
         </a>
+        <script dangerouslySetInnerHTML={{ __html: INSTALL_CAPTURE_SCRIPT }} />
         <BrandDefs glow={c.glow} fire={c.fire} />
         {children}
+        <RegisterServiceWorker />
       </body>
     </html>
   );

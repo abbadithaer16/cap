@@ -1,5 +1,6 @@
-import { dict, site, t } from '@/lib/site';
+import { dict, lang, site, t } from '@/lib/site';
 import { MobileMenu } from './MobileMenu';
+import { InstallButton } from './pwa/InstallButton';
 import { Logo } from './ui';
 
 export function Header() {
@@ -35,7 +36,9 @@ export function Header() {
             <span className="sm:hidden">{dict.bookShort}</span>
             <span className="max-sm:hidden">{dict.book}</span>
           </a>
-          <MobileMenu items={items} openLabel={dict.menu} closeLabel={dict.closeMenu} navLabel={dict.mainNav} />
+          <MobileMenu items={items} openLabel={dict.menu} closeLabel={dict.closeMenu} navLabel={dict.mainNav}>
+            <InstallButton lang={lang} variant="menu" />
+          </MobileMenu>
         </div>
       </div>
     </header>

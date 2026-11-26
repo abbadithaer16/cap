@@ -22,12 +22,10 @@ export type Photo = {
   focus?: string;
 };
 
-/**
- * A gallery photo. Until the file exists in /public, the site shows a clearly marked
- * placeholder in its place (and the build prints which files are still missing).
- */
+/** A real workshop photo in the gallery. The file must exist in /public. */
 export type GalleryPhoto = {
   src: string;
+  /** What the photo shows, in Arabic. */
   alt: Text;
   focus?: string;
 };
@@ -59,7 +57,8 @@ export type Service = {
 export type CarTypeIcon = 'hybrid' | 'electric' | 'petrol';
 
 export type Review = {
-  author: string;
+  /** Name as shown on Google. Leave out if unknown: the card then shows no name line. */
+  author?: string;
   /** Copied exactly from Google. Line breaks (\n) are kept on the card. */
   text: string;
   /** Star rating given on Google (1–5). */
@@ -67,12 +66,14 @@ export type Review = {
 };
 
 export type SiteConfig = {
-  /** Public URL without trailing slash, e.g. 'https://raad-auto.netlify.app'. */
+  /** Public URL without trailing slash, e.g. 'https://alraad-autojo.netlify.app'. */
   siteUrl: string;
   /** true = ask search engines not to list the site (<meta name="robots" content="noindex">). */
   noindex: boolean;
   lang: Lang;
   name: Text;
+  /** Short name under the app icon on phones: 'الرعد'. */
+  shortName: Text;
   /** Latin name from the logo, shown small above the headline: 'AL-RAAD'. */
   latinName: string;
   /** Rest of the Latin line: 'VEHICLE MAINTENANCE CENTER'. */
@@ -106,9 +107,15 @@ export type SiteConfig = {
     gallery: GalleryPhoto[];
     /** Social preview image, 1200×630 JPG (shown when the link is shared on WhatsApp etc.). */
     og: string;
-    /** Square PNG icons for browser tabs and phone home screens. */
-    icon: string;
-    appleIcon: string;
+    /** App icons (scripts/app-icons.mjs): browser tab, Android and iPhone home screens. */
+    icons: {
+      icon192: string;
+      icon512: string;
+      /** Android may crop it to a circle: the badge sits inside the safe area. */
+      maskable512: string;
+      /** 180 × 180 for iPhone */
+      apple: string;
+    };
   };
   seo: { title: Text; description: Text };
   hero: {

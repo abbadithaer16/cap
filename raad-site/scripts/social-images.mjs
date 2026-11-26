@@ -1,12 +1,10 @@
 /**
- * Creates the social preview image (og.jpg, 1200×630) and the browser / phone icons.
- * Run after changing the logo or the colours:
+ * Creates the social preview image (og.jpg, 1200×630): navy background, the glowing gear ring
+ * on the left, the AL-RAAD logo on the right. Run after changing the logo or the colours:
  *
  *   npm run social-images
  *
- * - Icons: the glowing gear ring with the lightning bolt (sharp at small sizes, unlike the
- *   detailed logo).
- * - og.jpg: navy background, gear ring on the left, the AL-RAAD logo on the right.
+ * App icons are made by scripts/app-icons.mjs (npm run app-icons).
  */
 import path from 'node:path';
 import sharp from 'sharp';
@@ -71,18 +69,6 @@ function background(w, h, lightX) {
   <rect width="${w}" height="${h}" fill="url(#light)"/>`;
 }
 
-// Icons: gear ring on navy, full bleed (phones round the corners themselves).
-for (const [file, size] of [
-  ['icon.png', 192],
-  ['apple-touch-icon.png', 180],
-]) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
-    ${background(size, size, 0.5)}
-    ${gear({ x: size * 0.04, y: size * 0.04, size: size * 0.92 })}
-  </svg>`;
-  await sharp(Buffer.from(svg)).png({ palette: true, quality: 90, effort: 10 }).toFile(path.join(outDir, file));
-}
-
 // Social image: gear ring on the left, the logo on the right (Arabic layout reads right first).
 const W = 1200;
 const H = 630;
@@ -110,4 +96,4 @@ await sharp(Buffer.from(base))
   .jpeg({ quality: 84, mozjpeg: true })
   .toFile(path.join(outDir, 'og.jpg'));
 
-console.log(`Wrote og.jpg, icon.png and apple-touch-icon.png to ${outDir}`);
+console.log(`Wrote og.jpg to ${outDir}`);

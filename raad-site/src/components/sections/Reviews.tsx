@@ -32,10 +32,12 @@ export function Reviews() {
                 <p>{review.text}</p>
               </blockquote>
               <figcaption className="mt-5 border-t border-line pt-4">
-                <span className="block font-bold text-fg">
-                  <bdi>{review.author}</bdi>
-                </span>
-                <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.95rem] text-muted">
+                {review.author ? (
+                  <span className="mb-1.5 block font-bold text-fg">
+                    <bdi>{review.author}</bdi>
+                  </span>
+                ) : null}
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.95rem] text-muted">
                   <Stars rating={review.rating} />
                   {dict.reviews.fromGoogle}
                 </span>

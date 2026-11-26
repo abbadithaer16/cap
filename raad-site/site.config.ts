@@ -10,11 +10,12 @@ import type { SiteConfig } from './src/lib/types';
 const PLACE_URL = 'https://www.google.com/maps/place/?q=place_id:ChIJid9gW3RnGxURlZGfX0CCQC0';
 
 const site: SiteConfig = {
-  siteUrl: 'https://raad-auto.netlify.app', // change when the center gets its own domain
+  siteUrl: 'https://alraad-autojo.netlify.app', // change when the center gets its own domain
   // Demo for client approval: hidden from Google. Set to false once the client approves.
   noindex: true,
   lang: 'ar',
   name: { ar: 'مركز الرعد لصيانة المركبات' },
+  shortName: { ar: 'الرعد' },
   latinName: 'AL-RAAD',
   latinTagline: 'VEHICLE MAINTENANCE CENTER',
 
@@ -42,8 +43,8 @@ const site: SiteConfig = {
       height: 354,
     },
     // Real workshop photos (number plates blurred). The first one is shown large.
-    // To add one: put the photo in public/images/raad, add it here with what it shows in `alt`,
-    // and rebuild. A listed file that is missing shows a marked placeholder instead.
+    // To add one: put the photo in public/images/raad, add it here with what it shows in `alt`
+    // (in Arabic), and rebuild. The build stops if a listed file is missing.
     // Never use the AI-generated posters as workshop photos.
     gallery: [
       {
@@ -63,8 +64,13 @@ const site: SiteConfig = {
       },
     ],
     og: '/images/raad/og.jpg',
-    icon: '/images/raad/icon.png',
-    appleIcon: '/images/raad/apple-touch-icon.png',
+    // From the round logo badge (npm run app-icons)
+    icons: {
+      icon192: '/images/raad/icon-192.png',
+      icon512: '/images/raad/icon-512.png',
+      maskable512: '/images/raad/icon-maskable-512.png',
+      apple: '/images/raad/apple-touch-icon.png',
+    },
   },
 
   /* ── Search engines & sharing ────────────────────────────────────────── */
@@ -183,7 +189,7 @@ const site: SiteConfig = {
         ].join('\n'),
       },
       {
-        author: '[الاسم]', // TODO: reviewer's name as shown on Google
+        // Reviewer's name not known yet: add `author: '...'` as shown on Google.
         rating: 5,
         text: 'ما شاء الله تبارك الله....من ابدع مراكز خدمة السيارات...شهادة حق تعامل راقي و امانه و متابعه بعد الصيانه ...انصح الجميع بالتعامل معهم....خصوصا المهندس رعد كل الاحترام والتقدير',
       },
